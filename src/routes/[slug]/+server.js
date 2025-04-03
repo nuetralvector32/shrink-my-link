@@ -1,4 +1,6 @@
 import { redirect } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
+
 
 /** @type {import('./$types').RequestHandler} */
 export const GET = async ({ params, env }) => {
@@ -19,7 +21,7 @@ export const GET = async ({ params, env }) => {
   metadata.clicks.push(Date.now());
   
   // Save the updated metadata back to KV.
-  await env.LINKS.put(slug, JSON.stringify(metadata));
+  await env.ns_shrink_my_link.put(slug, JSON.stringify(metadata));
   
   // Redirect the client to the original URL.
   throw redirect(302, longUrl);
