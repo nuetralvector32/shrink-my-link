@@ -5,7 +5,7 @@ export const GET = async ({ params, env }) => {
   const { slug } = params;
   
   // Look up the stored metadata in KV by short code.
-  const data = await env.LINKS.get(slug);
+  const data = await env["ns-shrink-my-link"].get(slug);
   if (!data) {
     return new Response('Not found', { status: 404 });
   }
