@@ -9,7 +9,7 @@ declare global {
 		// interface Platform {}
 		interface Platform {
 			env: {
-			  LINKS: LINKS;
+			  LINKS: KVNamespace;
 			}
 		  }
 	}
