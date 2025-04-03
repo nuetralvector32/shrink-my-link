@@ -1,18 +1,12 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
-declare global {
-	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
-		interface Platform {
-			env: {
-			  LINKS: KVNamespace;
-			}
-		  }
-	}
-}
+import { KVNamespace } from '@cloudflare/workers-types';
 
+declare global {
+ namespace App {
+  interface Platform {
+   env?: {
+    LINKS: KVNamespace;
+   };
+  }
+ }
+}
 export {};
