@@ -23,7 +23,7 @@ export const actions = {
       const slug = Math.random().toString(36).substring(2, 8);
       
       // Store in KV
-      await env.LINKS.put(slug, JSON.stringify({
+      await env["ns-shrink-my-link"].put(slug, JSON.stringify({
         longUrl,
         clickCount: 0,
         clicks: []
