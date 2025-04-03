@@ -3,7 +3,7 @@ export const load = async ({ env }) => {
     // List keys from KV. (Note: For larger datasets you may need pagination.)
     let list = await env.LINKS.list();
     let links = [];
-    
+    console.log(env.LINKS);
     for (const keyObj of list.keys) {
       const data = await env.LINKS.get(keyObj.name);
       const metadata = data ? JSON.parse(data) : null;
