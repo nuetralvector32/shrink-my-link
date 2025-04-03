@@ -4,5 +4,5 @@ pages_build_output_dir = ".svelte-kit/cloudflare"
 
 
 kv_namespaces = [
-  { binding = "ns_shrink_my_link", id = "404aff27168b497792de35d9c836f1f7" }
+  { binding = "LINKS", id = "404aff27168b497792de35d9c836f1f7" }
 ]

@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { env } from '$env/dynamic/public';
+
 
 
 /** @type {import('./$types').RequestHandler} */
@@ -7,7 +7,7 @@ export const GET = async ({ params, env }) => {
   const { slug } = params;
   
   // Look up the stored metadata in KV by short code.
-  const data = await env["ns-shrink-my-link"].get(slug);
+  const data = await env.LINKS.get(slug);
   if (!data) {
     return new Response('Not found', { status: 404 });
   }
@@ -21,7 +21,7 @@ export const GET = async ({ params, env }) => {
   metadata.clicks.push(Date.now());
   
   // Save the updated metadata back to KV.
-  await env["ns-shrink-my-link"].put(slug, JSON.stringify(metadata));
+  await env.LINKS.put(slug, JSON.stringify(metadata));
   
   // Redirect the client to the original URL.
   throw redirect(302, longUrl);
