@@ -1,34 +1,46 @@
-import { fail } from '@sveltejs/kit';
-
-function generateShortCode(length = 5) {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < length; i++) {
-    code += charset.charAt(Math.floor(Math.random() * charset.length));
-  }
-  return code;
-}
+import { generateUniqueSlug, isValidUrl, cleanupOldRateLimits } from '$lib/utils';
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-    default: async ({ request, env }) => {
+  default: async ({ request, env }) => {
+    try {
       const formData = await request.formData();
       const longUrl = formData.get('url');
       
-      if (!longUrl) {
-        return { error: 'URL is required' };
+      if (!longUrl || !isValidUrl(longUrl)) {
+        return { error: 'Please enter a valid URL starting with http:// or https://' };
       }
       
-      // Generate a random slug
-      const slug = Math.random().toString(36).substring(2, 8);
+      // Rate limiting
+      const rateLimitKey = `rate_limit_${request.headers.get('cf-connecting-ip')}`;
+      const count = await env.LINKS.get(rateLimitKey);
+      if (count && parseInt(count) >= 100) {
+        return { error: 'Rate limit exceeded. Please try again later.' };
+      }
       
-      // Store in KV
+      // Generate unique slug and store
+      const slug = await generateUniqueSlug(env);
       await env.LINKS.put(slug, JSON.stringify({
         longUrl,
         clickCount: 0,
-        clicks: []
+        clicks: [],
+        createdAt: Date.now()
       }));
       
-      return { shortUrl: `/${slug}` };
+      // Update rate limit
+      await env.LINKS.put(rateLimitKey, (count ? parseInt(count) + 1 : 1).toString(), { expirationTtl: 3600 });
+      
+      // Clean up old rate limits
+      await cleanupOldRateLimits(env);
+      
+      const shortUrl = `${request.url.split('/').slice(0, 3).join('/')}/${slug}`;
+      return { shortUrl };
+    } catch (error: any) {
+      console.error('Error creating short URL:', error);
+      if (error.message?.includes('Failed to generate unique slug')) {
+        return { error: 'Unable to generate a unique short URL. Please try again.' };
+      }
+      return { error: 'An unexpected error occurred. Please try again.' };
     }
-  };
+  }
+};

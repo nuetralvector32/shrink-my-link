@@ -1,12 +1,15 @@
 /** @type {import('./$types').PageServerLoad} */
-export const load = async ({ env }) => {
-    console.log("environment: ",env);
+export const load = async ({ platform }) => {
+    if (!platform?.env) {
+        return { links: [] };
+    }
+
     // List keys from KV. (Note: For larger datasets you may need pagination.)
-    let list = await env.LINKS.list();
+    let list = await platform.env.LINKS.list();
     let links = [];
     
     for (const keyObj of list.keys) {
-      const data = await env.LINKS.get(keyObj.name);
+      const data = await platform.env.LINKS.get(keyObj.name);
       const metadata = data ? JSON.parse(data) : null;
       links.push({
         code: keyObj.name,
@@ -16,4 +19,4 @@ export const load = async ({ env }) => {
     }
     
     return { links };
-  };
+};
