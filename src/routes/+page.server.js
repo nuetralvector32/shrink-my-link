@@ -1,4 +1,4 @@
-import { generateUniqueSlug, isValidUrl, cleanupOldRateLimits } from '$lib/utils';
+import { generateUniqueSlug, isValidUrl } from '$lib/utils';
 
 export const actions = {
   default: async (event) => {
@@ -14,12 +14,6 @@ export const actions = {
         return { error: 'Please enter a valid URL starting with http:// or https://' };
       }
       
-      const rateLimitKey = `rate_limit_${event.request.headers.get('cf-connecting-ip')}`;
-      const count = await event.platform.env.LINKS.get(rateLimitKey);
-      if (count && parseInt(count) >= 100) {
-        return { error: 'Rate limit exceeded. Please try again later.' };
-      }
-      
       // Generate unique slug and store
       const slug = await generateUniqueSlug(event.platform.env);
       await event.platform.env.LINKS.put(slug, JSON.stringify({
@@ -28,11 +22,6 @@ export const actions = {
         clicks: [],
         createdAt: Date.now()
       }));
-      
-      // Update rate limit
-      await event.platform.env.LINKS.put(rateLimitKey, (count ? parseInt(count) + 1 : 1).toString(), { expirationTtl: 3600 });
-      
-      await cleanupOldRateLimits(event.platform.env);
       
       const url = new URL(event.request.url);
       const shortUrl = `${url.origin}/${slug}`;

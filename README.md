@@ -65,7 +65,6 @@ Handles the backend logic for shortening URLs.
 **How it works:**
 - Receives the form submission from the frontend.
 - Validates the URL.
-- Checks rate limits for the user (based on IP).
 - Generates a unique short code (slug) and stores the mapping in Cloudflare KV.
 - Returns the short URL to the frontend.
 - Handles and reports errors gracefully.
@@ -79,7 +78,6 @@ Contains utility functions used by the backend.
 **How it works:**
 - `isValidUrl(url)`: Checks if a URL is valid and uses http/https.
 - `generateUniqueSlug(env)`: Generates a unique 6-character slug, ensuring no duplicates in KV.
-- `cleanupOldRateLimits(env)`: Cleans up old rate limit entries in KV.
 
 ---
 
