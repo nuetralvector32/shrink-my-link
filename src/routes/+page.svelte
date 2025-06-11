@@ -1,4 +1,5 @@
 <script>
+  import { enhance } from '$app/forms';
   export let data;
   let submitting = false;
   let copied = false;
@@ -25,7 +26,7 @@
     <h1>URL Shortener</h1>
     <p class="subtitle">Create short, memorable links for your long URLs</p>
 
-    <form method="post" on:submit={handleSubmit} class="url-form">
+    <form method="post" use:enhance on:submit={handleSubmit} class="url-form">
       <div class="input-group">
         <input 
           type="url" 
