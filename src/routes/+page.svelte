@@ -46,6 +46,11 @@
       </div>
     </form>
 
+    <!-- Admin Page Button -->
+    <div class="admin-link-container">
+      <a href="/admin" class="admin-link-btn">Go to Admin Page</a>
+    </div>
+
     {#if data && data.error}
       <div class="error">
         <p>{data.error}</p>
@@ -210,5 +215,26 @@
 
   .stats-link:hover {
     text-decoration: underline;
+  }
+
+  .admin-link-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  .admin-link-btn {
+    background: #e2e8f0;
+    color: #2d3748;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .admin-link-btn:hover {
+    background: #cbd5e1;
   }
 </style>
