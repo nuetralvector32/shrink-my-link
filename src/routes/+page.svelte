@@ -19,6 +19,7 @@
   }
 </script>
 
+<pre>{JSON.stringify(data, null, 2)}</pre>
 <main>
   <div class="container">
     <h1>URL Shortener</h1>
