@@ -1,14 +1,10 @@
-export function isValidUrl(url: string): boolean {
+export function isValidUrl(url) {
   try {
+    // Must start with http:// or https://
+    if (!/^https?:\/\/.+/i.test(url)) return false;
     const parsedUrl = new URL(url);
-    // Check if the URL has a protocol and hostname
-    if (!parsedUrl.protocol || !parsedUrl.hostname) {
-      return false;
-    }
-    // Only allow http and https protocols
-    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-      return false;
-    }
+    if (!parsedUrl.protocol || !parsedUrl.hostname) return false;
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) return false;
     return true;
   } catch {
     return false;
