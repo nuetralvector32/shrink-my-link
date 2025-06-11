@@ -48,7 +48,7 @@
 
     <!-- Admin Page Button -->
     <div class="admin-link-container">
-      <a href="/admin" class="admin-link-btn">Go to Admin Page</a>
+      <a href="/admin" class="admin-link-btn">Admin Page</a>
     </div>
 
     {#if data && data.error}
