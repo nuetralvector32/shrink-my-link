@@ -14,7 +14,6 @@ export const actions = {
         return { error: 'Please enter a valid URL starting with http:// or https://' };
       }
       
-      // Rate limiting
       const rateLimitKey = `rate_limit_${event.request.headers.get('cf-connecting-ip')}`;
       const count = await event.platform.env.LINKS.get(rateLimitKey);
       if (count && parseInt(count) >= 100) {
@@ -33,10 +32,11 @@ export const actions = {
       // Update rate limit
       await event.platform.env.LINKS.put(rateLimitKey, (count ? parseInt(count) + 1 : 1).toString(), { expirationTtl: 3600 });
       
-      // Clean up old rate limits
       await cleanupOldRateLimits(event.platform.env);
       
-      const shortUrl = `${event.request.url.split('/').slice(0, 3).join('/')}/${slug}`;
+      const url = new URL(event.request.url);
+      const shortUrl = `${url.origin}/${slug}`;
+      
       return { shortUrl };
     } catch (error) {
       console.error('Error creating short URL:', error);
