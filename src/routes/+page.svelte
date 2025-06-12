@@ -5,9 +5,7 @@
   let copied = false;
   let url = '';
   
-  function handleSubmit() {
-    submitting = true;
-  }
+
 
   async function copyToClipboard(text) {
     try {
@@ -26,7 +24,7 @@
     <h1>URL Shortener</h1>
     <p class="subtitle">Create short, memorable links for your long URLs</p>
 
-    <form method="post" use:enhance on:submit={handleSubmit} class="url-form">
+    <form method="post" on:submit={handleSubmit} class="url-form">
       <div class="input-group">
         <input 
           type="url" 
@@ -36,14 +34,7 @@
           placeholder="https://example.com" 
           required 
         />
-        {#if submitting}
-          <button type="submit" disabled class="loading">
-            <span class="spinner"></span>
-            Shortening...
-          </button>
-        {:else}
-          <button type="submit">Shorten URL</button>
-        {/if}
+        <button type="submit">Shorten URL</button>
       </div>
     </form>
 
