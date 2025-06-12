@@ -56,7 +56,6 @@
             {copied ? 'Copied!' : 'Copy'}
           </button>
         </div>
-        <a href="{form.shortUrl}/stats" class="stats-link">View Statistics</a>
       {:else}
         <div class="short-url-row">
           <input type="text" readonly value="" class="short-url-input" placeholder="No link yet" />
@@ -200,14 +199,5 @@
   }
   .copy-btn {
     white-space: nowrap;
-  }
-  .stats-link {
-    display: block;
-    text-align: center;
-    color: #4299e1;
-    text-decoration: none;
-  }
-  .stats-link:hover {
-    text-decoration: underline;
   }
 </style>

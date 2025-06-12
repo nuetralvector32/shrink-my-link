@@ -14,6 +14,21 @@ export const actions = {
         return { error: 'Please enter a valid URL starting with http:// or https://' };
       }
       
+      const list = await event.platform.env.LINKS.list();
+      for (const keyObj of list.keys) {
+        const data = await event.platform.env.LINKS.get(keyObj.name);
+        if (data) {
+          const parsed = JSON.parse(data);
+          if (parsed.longUrl === longUrl) {
+            //return short URL of existing link
+            const url = new URL(event.request.url);
+            const shortUrl = `${url.origin}/${keyObj.name}`;
+            return { shortUrl, longUrl };
+          }
+        }
+      }
+
+
       // Generate unique slug and store
       const slug = await generateUniqueSlug(event.platform.env);
       await event.platform.env.LINKS.put(slug, JSON.stringify({
