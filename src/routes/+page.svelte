@@ -16,6 +16,10 @@
       console.error('Failed to copy:', err);
     }
   }
+
+  $: if (data && data.longUrl) {
+    url = data.longUrl;
+  }
 </script>
 
 <main>
@@ -30,6 +34,7 @@
           id="url" 
           name="url" 
           bind:value={url}
+          value={data && data.longUrl ? data.longUrl : url}
           placeholder="https://example.com" 
           required 
         />

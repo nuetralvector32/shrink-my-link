@@ -28,7 +28,7 @@ export const actions = {
       const shortUrl = `${url.origin}/${slug}`;
       console.log(shortUrl);
       
-      return { shortUrl };
+      return { shortUrl, longUrl };
     } catch (error) {
       console.error('Error creating short URL:', error);
       var message = (typeof error === 'object' && error !== null && 'message' in error) ? error.message : '';
