@@ -1,11 +1,11 @@
 <script>
-  import { enhance } from '$app/forms';
   export let data;
-  let submitting = false;
   let copied = false;
   let url = '';
-  
 
+  function handleSubmit() {
+    // No need to set submitting, since the page reloads
+  }
 
   async function copyToClipboard(text) {
     try {
@@ -18,7 +18,6 @@
   }
 </script>
 
-<pre>{JSON.stringify(data, null, 2)}</pre>
 <main>
   <div class="container">
     <h1>URL Shortener</h1>
@@ -139,72 +138,12 @@
     background: #3182ce;
   }
 
-  button:disabled {
-    background: #a0aec0;
-    cursor: not-allowed;
-  }
-
-  .loading {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .spinner {
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid #ffffff;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
   .error {
     background: #fed7d7;
     color: #c53030;
     padding: 1rem;
     border-radius: 6px;
     margin-bottom: 1rem;
-  }
-
-  .result {
-    background: #ebf8ff;
-    padding: 1.5rem;
-    border-radius: 6px;
-  }
-
-  .short-url {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .short-url-input {
-    flex: 1;
-    padding: 0.75rem;
-    border: 2px solid #bee3f8;
-    border-radius: 6px;
-    background: white;
-    font-size: 1rem;
-  }
-
-  .copy-btn {
-    white-space: nowrap;
-  }
-
-  .stats-link {
-    display: block;
-    text-align: center;
-    color: #4299e1;
-    text-decoration: none;
-  }
-
-  .stats-link:hover {
-    text-decoration: underline;
   }
 
   .admin-link-container {
@@ -257,5 +196,14 @@
   }
   .copy-btn {
     white-space: nowrap;
+  }
+  .stats-link {
+    display: block;
+    text-align: center;
+    color: #4299e1;
+    text-decoration: none;
+  }
+  .stats-link:hover {
+    text-decoration: underline;
   }
 </style>
