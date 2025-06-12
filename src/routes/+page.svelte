@@ -34,7 +34,6 @@
           id="url" 
           name="url" 
           bind:value={url}
-          value={data && data.longUrl ? data.longUrl : url}
           placeholder="https://example.com" 
           required 
         />
