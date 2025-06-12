@@ -1,22 +1,27 @@
-export const load = async ({ platform }) => {
+export const load = async ({ platform, url }) => {
   if (!platform?.env) {
-      return { links: [] };
+    return { links: [], nextCursor: null, hasMore: false };
   }
 
-  let list = await platform.env.LINKS.list();
+  const limit = 20;
+  const cursor = url.searchParams.get('cursor') || undefined;
+  let list = await platform.env.LINKS.list({ limit, cursor });
   let links = [];
 
   for (const keyObj of list.keys) {
-      // Only include keys that are 6 characters long and alphanumeric
-      if (!/^[a-z0-9]{6}$/.test(keyObj.name)) continue;
-      const data = await platform.env.LINKS.get(keyObj.name);
-      const metadata = data ? JSON.parse(data) : null;
-      links.push({
-          code: keyObj.name,
-          longUrl: metadata ? metadata.longUrl : '',
-          clickCount: metadata ? metadata.clickCount : 0,
-      });
+    if (!/^[a-z0-9]{6}$/.test(keyObj.name)) continue;
+    const data = await platform.env.LINKS.get(keyObj.name);
+    const metadata = data ? JSON.parse(data) : null;
+    links.push({
+      code: keyObj.name,
+      longUrl: metadata ? metadata.longUrl : '',
+      clickCount: metadata ? metadata.clickCount : 0,
+    });
   }
 
-  return { links };
+  return {
+    links,
+    nextCursor: list.list_complete ? null : list.cursor,
+    hasMore: !list.list_complete
+  };
 };

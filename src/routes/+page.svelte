@@ -27,7 +27,7 @@
     <h1>URL Shortener</h1>
     <p class="subtitle">Create short, memorable links for your long URLs</p>
 
-    <form method="post" on:submit={handleSubmit} class="url-form">
+    <form method="post" on:submit={handleSubmit} class="url-form" novalidate>
       <div class="input-group">
         <input 
           type="url" 

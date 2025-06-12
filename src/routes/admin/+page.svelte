@@ -4,6 +4,37 @@
   if (typeof window !== 'undefined') {
     base = window.location.origin;
   }
+
+  // Pagination state
+  let prevCursors = [];
+  let currentCursor = null;
+  let nextCursor = data.nextCursor;
+  let hasMore = data.hasMore;
+
+  // On mount, get cursor from URL
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    currentCursor = params.get('cursor');
+  }
+
+  function goToNext() {
+    if (nextCursor) {
+      prevCursors = [...prevCursors, currentCursor];
+      window.location.search = `?cursor=${nextCursor}`;
+    }
+  }
+
+  function goToPrev() {
+    if (prevCursors.length > 0) {
+      const prev = prevCursors[prevCursors.length - 1];
+      prevCursors = prevCursors.slice(0, -1);
+      if (prev) {
+        window.location.search = `?cursor=${prev}`;
+      } else {
+        window.location.search = '';
+      }
+    }
+  }
 </script>
 
 <h1>Admin: List of Short Links</h1>
@@ -32,6 +63,11 @@
     {/each}
   </tbody>
 </table>
+
+<div style="margin-top: 1rem; display: flex; gap: 1rem;">
+  <button on:click={goToPrev} disabled={prevCursors.length === 0}>Previous</button>
+  <button on:click={goToNext} disabled={!hasMore}>Next</button>
+</div>
 
 <style>
 table {

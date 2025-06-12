@@ -1,4 +1,5 @@
 import { generateUniqueSlug, isValidUrl } from '$lib/utils';
+import { error as svelteError } from '@sveltejs/kit';
 
 export const actions = {
   default: async (event) => {
@@ -28,7 +29,6 @@ export const actions = {
         }
       }
 
-
       // Generate unique slug and store
       const slug = await generateUniqueSlug(event.platform.env);
       await event.platform.env.LINKS.put(slug, JSON.stringify({
@@ -39,18 +39,12 @@ export const actions = {
       }));
       
       const url = new URL(event.request.url);
-      console.log(url);
       const shortUrl = `${url.origin}/${slug}`;
-      console.log(shortUrl);
-      
       return { shortUrl, longUrl };
-    } catch (error) {
-      console.error('Error creating short URL:', error);
-      var message = (typeof error === 'object' && error !== null && 'message' in error) ? error.message : '';
-      if (typeof message === 'string' && message.includes('Failed to generate unique slug')) {
-        return { error: 'Unable to generate a unique short URL. Please try again.' };
-      }
-      return { error: 'An unexpected error occurred. Please try again.' };
+    } catch (err) {
+      console.error('Error creating short URL:', err);
+      const message = err instanceof Error ? err.message : err.toString();
+      throw svelteError(500, message);
     }
   }
 };
