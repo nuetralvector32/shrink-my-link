@@ -52,51 +52,31 @@
       <a href="/admin" class="admin-link-btn">Admin Page</a>
     </div>
 
+    <!-- Shortened URL Box -->
+    <div class="short-url-box">
+      <label>Your shortened URL:</label>
+      {#if data && data.shortUrl}
+        <div class="short-url-row">
+          <input type="text" readonly value={data.shortUrl} class="short-url-input" />
+          <button class="copy-btn" on:click={() => copyToClipboard(data.shortUrl)}>
+            {copied ? 'Copied!' : 'Copy'}
+          </button>
+        </div>
+        <a href="{data.shortUrl}/stats" class="stats-link">View Statistics</a>
+      {:else}
+        <div class="short-url-row">
+          <input type="text" readonly value="" class="short-url-input" placeholder="No link yet" />
+        </div>
+      {/if}
+    </div>
+
     {#if data && data.error}
       <div class="error">
         <p>{data.error}</p>
       </div>
     {/if}
-
-    {#if data && data.shortUrl}
-      <div class="result">
-        <div class="short-url">
-          <input 
-            type="text" 
-            readonly 
-            value={data.shortUrl} 
-            class="short-url-input"
-          />
-          <button 
-            class="copy-btn" 
-            on:click={() => copyToClipboard(data.shortUrl)}
-          >
-            {copied ? 'Copied!' : 'Copy'}
-          </button>
-        </div>
-        <a href="{data.shortUrl}/stats" class="stats-link">View Statistics</a>
-      </div>
-    {/if}
   </div>
 </main>
-
-<!-- Shortened URL Box -->
-<div class="short-url-box">
-  <label>Your shortened URL:</label>
-  {#if data && data.shortUrl}
-    <div class="short-url-row">
-      <input type="text" readonly value={data.shortUrl} class="short-url-input" />
-      <button class="copy-btn" on:click={() => copyToClipboard(data.shortUrl)}>
-        {copied ? 'Copied!' : 'Copy'}
-      </button>
-    </div>
-    <a href="{data.shortUrl}/stats" class="stats-link">View Statistics</a>
-  {:else}
-    <div class="short-url-row">
-      <input type="text" readonly value="" class="short-url-input" placeholder="No link yet" />
-    </div>
-  {/if}
-</div>
 
 <style>
   main {
@@ -258,33 +238,33 @@
   }
 
   .short-url-box {
-  margin-top: 2rem;
-  background: #f8fafc;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  max-width: 100%;
-}
-.short-url-box label {
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-.short-url-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-.short-url-input {
-  flex: 1;
-  padding: 0.75rem;
-  border: 2px solid #bee3f8;
-  border-radius: 6px;
-  background: white;
-  font-size: 1rem;
-}
-.copy-btn {
-  white-space: nowrap;
-}
+    margin-top: 2rem;
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    max-width: 100%;
+  }
+  .short-url-box label {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .short-url-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .short-url-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #bee3f8;
+    border-radius: 6px;
+    background: white;
+    font-size: 1rem;
+  }
+  .copy-btn {
+    white-space: nowrap;
+  }
 </style>
