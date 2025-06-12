@@ -24,7 +24,9 @@ export const actions = {
       }));
       
       const url = new URL(event.request.url);
+      console.log(url);
       const shortUrl = `${url.origin}/${slug}`;
+      console.log(shortUrl);
       
       return { shortUrl };
     } catch (error) {
