@@ -1,10 +1,10 @@
 <script>
-  export let data;
+  export let form;
   let copied = false;
   let url = '';
 
   function handleSubmit() {
-    // No need to set submitting, since the page reloads
+    
   }
 
   async function copyToClipboard(text) {
@@ -17,8 +17,8 @@
     }
   }
 
-  $: if (data && data.longUrl) {
-    url = data.longUrl;
+  $: if (form && form.longUrl) {
+    url = form.longUrl;
   }
 </script>
 
@@ -49,14 +49,14 @@
     <!-- Shortened URL Box -->
     <div class="short-url-box">
       <label>Your shortened URL:</label>
-      {#if data && data.shortUrl}
+      {#if form && form.shortUrl}
         <div class="short-url-row">
-          <input type="text" readonly value={data.shortUrl} class="short-url-input" />
-          <button class="copy-btn" on:click={() => copyToClipboard(data.shortUrl)}>
+          <input type="text" readonly value={form.shortUrl} class="short-url-input" />
+          <button class="copy-btn" on:click={() => copyToClipboard(form.shortUrl)}>
             {copied ? 'Copied!' : 'Copy'}
           </button>
         </div>
-        <a href="{data.shortUrl}/stats" class="stats-link">View Statistics</a>
+        <a href="{form.shortUrl}/stats" class="stats-link">View Statistics</a>
       {:else}
         <div class="short-url-row">
           <input type="text" readonly value="" class="short-url-input" placeholder="No link yet" />
@@ -64,9 +64,9 @@
       {/if}
     </div>
 
-    {#if data && data.error}
+    {#if form && form.error}
       <div class="error">
-        <p>{data.error}</p>
+        <p>{form.error}</p>
       </div>
     {/if}
   </div>
