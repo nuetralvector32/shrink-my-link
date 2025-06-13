@@ -44,7 +44,6 @@
     <tr>
       <th>Short URL</th>
       <th>Original URL</th>
-      <th>Click Count</th>
       <th>Stats</th>
     </tr>
   </thead>
@@ -57,8 +56,9 @@
         <td>
           <a href={link.longUrl} target="_blank">{link.longUrl}</a>
         </td>
-        <td>{link.clickCount}</td>
-        <td><a href={`/${link.code}/stats`} target="_blank">View Stats</a></td>
+        <td>
+          <a href={`/${link.code}/stats`} target="_blank">{base}/{link.code}/stats</a>
+        </td>
       </tr>
     {/each}
   </tbody>
