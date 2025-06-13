@@ -6,7 +6,7 @@ export const GET = async ({ params, platform }) => {
   const env = platform?.env;
   if (!env) return new Response('Not found', { status: 404 });
 
-  // Look up the stored metadata in KV by short code.
+  // Look up stored metadata in KV using 6 digi short 
   const data = await env.LINKS.get(slug);
   if (!data) {
     return new Response('Not found', { status: 404 });
@@ -15,6 +15,12 @@ export const GET = async ({ params, platform }) => {
   const metadata = JSON.parse(data);
   const longUrl = metadata.longUrl;
 
-  // Redirect the client to the original URL.
+  // update click stats
+  metadata.clickCount = (metadata.clickCount || 0) + 1;
+  metadata.clicks = metadata.clicks || [];
+  metadata.clicks.push(Date.now());
+  await env.LINKS.put(slug, JSON.stringify(metadata));
+
+  // Redirect client to original URL
   throw redirect(302, longUrl);
 };
