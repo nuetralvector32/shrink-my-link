@@ -1,17 +1,20 @@
-export function isValidUrl(url) {
-  try {
-    // Must start with http:// or https://
-    if (!/^https?:\/\/.+/i.test(url)) return false;
-    const parsedUrl = new URL(url);
-    if (!parsedUrl.protocol || !parsedUrl.hostname) return false;
-    if (!['http:', 'https:'].includes(parsedUrl.protocol)) return false;
-    return true;
-  } catch {
+import type { KVNamespace } from '@cloudflare/workers-types';
+
+export function isValidUrl(url: string): boolean {
+  if (!URL.canParse(url)) {
     return false;
   }
+
+  const parsedUrl = new URL(url);
+  
+  if (!parsedUrl.protocol || !parsedUrl.hostname) {
+    return false;
+  }
+
+  return ['http:', 'https:'].includes(parsedUrl.protocol);
 }
 
-export async function generateUniqueSlug(env: any): Promise<string> {
+export async function generateUniqueSlug(env: { LINKS: KVNamespace }): Promise<string> {
   const maxAttempts = 5;
   let attempts = 0;
   
@@ -38,23 +41,3 @@ function generateSlug(): string {
   return slug;
 }
 
-export async function cleanupOldRateLimits(env: any) {
-  // Clean up rate limit entries older than 24 hours
-  const now = Date.now();
-  const cleanupKey = `cleanup_${Math.floor(now / 86400000)}`;
-  const cleanupTime = now - 86400000; // 24 hours ago
-  
-  // Get all rate limit keys
-  const list = await env.LINKS.list({ prefix: 'rate_limit_' });
-  
-  // Delete old entries
-  for (const key of list.keys) {
-    const timestamp = parseInt(key.name.split('_')[1]);
-    if (timestamp < cleanupTime) {
-      await env.LINKS.delete(key.name);
-    }
-  }
-  
-  // Store cleanup marker
-  await env.LINKS.put(cleanupKey, '1', { expirationTtl: 86400 });
-}
