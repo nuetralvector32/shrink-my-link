@@ -16,21 +16,17 @@ export const actions = {
         return { error: 'Please enter a valid URL starting with http:// or https://' };
       }
       
-      const list = await event.platform.env.LINKS.list();
-      for (const keyObj of list.keys) {
-        const data = await event.platform.env.LINKS.get(keyObj.name);
-        if (data) {
-          const parsed = JSON.parse(data);
-          if (parsed.longUrl === longUrl) {
-            //return short URL of existing link
-            const url = new URL(event.request.url);
-            const shortUrl = `${url.origin}/${keyObj.name}`;
-            return { shortUrl, longUrl };
-          }
-        }
+      // Check if URL already exists using the reverse index
+      const reverseKey = `url:${longUrl}`;
+      const existingCode = await event.platform.env.LINKS.get(reverseKey);
+      
+      if (existingCode) {
+        // if URL already exists, return existing short URL
+        const url = new URL(event.request.url);
+        const shortUrl = `${url.origin}/${existingCode}`;
+        return { shortUrl, longUrl };
       }
 
-      // Generate unique slug and store
       const slug = await generateUniqueSlug(event.platform.env);
       await event.platform.env.LINKS.put(slug, JSON.stringify({
         longUrl,
@@ -38,6 +34,9 @@ export const actions = {
         clicks: [],
         createdAt: Date.now()
       }));
+
+      // Store the reverse index
+      await event.platform.env.LINKS.put(`url:${longUrl}`, slug);
       
       const url = new URL(event.request.url);
       const shortUrl = `${url.origin}/${slug}`;
