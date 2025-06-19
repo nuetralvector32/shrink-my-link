@@ -8,7 +8,6 @@
   function goToNext() {
     if (data.nextCursor) {
       prevCursors = [...prevCursors, currentCursor];
-      // Use SvelteKit's goto for navigation
       import('$app/navigation').then(({ goto }) => {
         goto(`?cursor=${data.nextCursor}`);
       });
@@ -37,11 +36,15 @@
   <p>Created at: {new Date(data.metadata.createdAt).toLocaleString()}</p>
   <p>Total clicks: {data.metadata.clickCount}</p>
   <h2>Click Timestamps</h2>
-  <ul>
-    {#each data.clicks as click}
-      <li>{new Date(click).toLocaleString()}</li>
-    {/each}
-  </ul>
+  {#if data.clicks && data.clicks.length > 0}
+    <ul>
+      {#each data.clicks as click}
+        <li>{new Date(click).toLocaleString()}</li>
+      {/each}
+    </ul>
+  {:else}
+    <p>No clicks yet.</p>
+  {/if}
 {:else}
   <p>No data available.</p>
 {/if}
