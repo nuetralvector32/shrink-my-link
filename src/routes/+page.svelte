@@ -2,6 +2,8 @@
   export let form;
   let copied = false;
   $: url = form?.longUrl ?? '';
+  $: shortUrl = form?.shortUrl ?? '';
+  $: error = form?.error ?? '';
 
 
   async function copyToClipboard(text) {
@@ -42,12 +44,17 @@
     <!-- Shortened URL Box -->
     <div class="short-url-box">
       <label>Your shortened URL:</label>
-      {#if form && form.shortUrl}
-        <div class="short-url-row">
-          <input type="text" readonly value={form.shortUrl} class="short-url-input" />
-          <button class="copy-btn" on:click={() => copyToClipboard(form.shortUrl)}>
-            {copied ? 'Copied!' : 'Copy'}
-          </button>
+      {#if shortUrl}
+        <div class="short-url-row" style="flex-direction: column; align-items: flex-start;">
+          <a href={shortUrl} target="_blank" rel="noopener" class="short-url-link">
+            {shortUrl}
+          </a>
+          <div style="display: flex; width: 100%; gap: 0.5rem; margin-top: 0.5rem;">
+            <input type="text" readonly value={shortUrl} class="short-url-input" />
+            <button class="copy-btn" on:click={() => copyToClipboard(shortUrl)}>
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
+          </div>
         </div>
       {:else}
         <div class="short-url-row">
@@ -56,9 +63,9 @@
       {/if}
     </div>
 
-    {#if form && form.error}
+    {#if error}
       <div class="error">
-        <p>{form.error}</p>
+        <p>{error}</p>
       </div>
     {/if}
   </div>
@@ -192,5 +199,16 @@
   }
   .copy-btn {
     white-space: nowrap;
+  }
+
+  .short-url-link {
+    color: #4299e1;
+    text-decoration: underline;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    word-break: break-all;
+  }
+  .short-url-link:hover {
+    color: #3182ce;
   }
 </style>
