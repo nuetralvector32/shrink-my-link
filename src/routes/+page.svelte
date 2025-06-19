@@ -1,11 +1,8 @@
 <script>
   export let form;
   let copied = false;
-  let url = '';
+  $: url = form?.longUrl ?? '';
 
-  function handleSubmit() {
-    
-  }
 
   async function copyToClipboard(text) {
     try {
@@ -16,18 +13,14 @@
       console.error('Failed to copy:', err);
     }
   }
-
-  $: if (form && form.longUrl) {
-    url = form.longUrl;
-  }
 </script>
 
 <main>
   <div class="container">
     <h1>URL Shortener</h1>
-    <p class="subtitle">Create short, memorable links for your long URLs</p>
+    <p class="subtitle">Create short links for your long URLs</p>
 
-    <form method="post" on:submit={handleSubmit} class="url-form" novalidate>
+    <form method="post" class="url-form" novalidate>
       <div class="input-group">
         <input 
           type="url" 

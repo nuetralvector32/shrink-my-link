@@ -1,6 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 
-/** @type {import('./$types').RequestHandler} */
 export const GET = async ({ params, platform }) => {
   const { slug } = params;
   const env = platform?.env;
@@ -15,10 +14,10 @@ export const GET = async ({ params, platform }) => {
   const metadata = JSON.parse(data);
   const longUrl = metadata.longUrl;
 
-  // update click stats
+  const timestamp = Date.now();
+  await env.LINKS.put(`history:${slug}:${timestamp}`, '');
+
   metadata.clickCount = (metadata.clickCount || 0) + 1;
-  metadata.clicks = metadata.clicks || [];
-  metadata.clicks.push(Date.now());
   await env.LINKS.put(slug, JSON.stringify(metadata));
 
   // Redirect client to original URL

@@ -1,26 +1,19 @@
 <script>
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
   export let data;
-  let base = '';
-  if (typeof window !== 'undefined') {
-    base = window.location.origin;
-  }
+  
+  $: base = $page.url.origin;
+  $: currentCursor = $page.url.searchParams.get('cursor');
 
-  // Pagination state
   let prevCursors = [];
-  let currentCursor = null;
   let nextCursor = data.nextCursor;
   let hasMore = data.hasMore;
-
-  // On mount, get cursor from URL
-  if (typeof window !== 'undefined') {
-    const params = new URLSearchParams(window.location.search);
-    currentCursor = params.get('cursor');
-  }
 
   function goToNext() {
     if (nextCursor) {
       prevCursors = [...prevCursors, currentCursor];
-      window.location.search = `?cursor=${nextCursor}`;
+      goto(`?cursor=${nextCursor}`);
     }
   }
 
@@ -29,15 +22,17 @@
       const prev = prevCursors[prevCursors.length - 1];
       prevCursors = prevCursors.slice(0, -1);
       if (prev) {
-        window.location.search = `?cursor=${prev}`;
+        goto(`?cursor=${prev}`);
       } else {
-        window.location.search = '';
+        goto(window.location.pathname); // just the path, no query
       }
     }
   }
 </script>
 
 <h1>Admin: List of Short Links</h1>
+
+<p>Base URL: {$page.url.origin}</p>
 
 <table>
   <thead>
